@@ -15,9 +15,10 @@ class SecondaryDomainMeta(type):
 
 
 class SecondaryDomain(metaclass=SecondaryDomainMeta):
-    def __init__(self, master, my_port):
+    def __init__(self, master, my_port, lagtime):
         self.messages_mtx = Lock()
         self.messages = dict()
+        self.lagtime = lagtime
 
         hostname=socket.gethostname()   
         IPAddr=socket.gethostbyname(hostname)   
@@ -26,14 +27,18 @@ class SecondaryDomain(metaclass=SecondaryDomainMeta):
             "port": str(my_port)
         }
 
-        # A POST request to tthe API
+        # A POST request to the API
         post_response = requests.post("http://"+master+ "/register", json=data)
+
 
         # Print the response
         if not post_response.ok:
             exit()
     
     def add_message(self, id, msg):
+        if self.lagtime != None:
+            time.sleep(self.lagtime)
+
         with self.messages_mtx:
             self.messages[id] = msg
 

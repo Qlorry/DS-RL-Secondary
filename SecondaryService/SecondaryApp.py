@@ -23,13 +23,16 @@ class SecondaryApp:
         args = self.arg_parser.parse_args()
         self.config[ConfigKeys.PORT] = args.port
         self.config[ConfigKeys.MASTER_ADDR] = args.master
+        self.config[ConfigKeys.LAG] = args.lag
+        
 
     def add_args_to_parser(self):
         self.arg_parser.add_argument('-p', '--port', type=int) 
         self.arg_parser.add_argument('-m', '--master', type=str) 
+        self.arg_parser.add_argument('-l', '--lag', type=int) 
 
     def run(self):
-        SecondaryDomain(self.config[ConfigKeys.MASTER_ADDR], self.config[ConfigKeys.PORT])
+        SecondaryDomain(self.config[ConfigKeys.MASTER_ADDR], self.config[ConfigKeys.PORT], self.config[ConfigKeys.LAG])
 
         server_address = ('', self.config[ConfigKeys.PORT])
         httpd = HTTPServer(server_address, SecondaryService)
