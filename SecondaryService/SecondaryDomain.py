@@ -17,7 +17,7 @@ class SecondaryDomainMeta(type):
 class SecondaryDomain(metaclass=SecondaryDomainMeta):
     def __init__(self, master, my_port):
         self.messages_mtx = Lock()
-        self.messages = []
+        self.messages = dict()
 
         hostname=socket.gethostname()   
         IPAddr=socket.gethostbyname(hostname)   
@@ -32,5 +32,13 @@ class SecondaryDomain(metaclass=SecondaryDomainMeta):
         # Print the response
         if not post_response.ok:
             exit()
+    
+    def add_message(self, id, msg):
+        with self.messages_mtx:
+            self.messages[id] = msg
+
+    def get_messages(self):
+        with self.messages_mtx:
+            return self.messages
         
         
