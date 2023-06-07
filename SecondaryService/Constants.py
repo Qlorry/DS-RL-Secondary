@@ -6,3 +6,4 @@ SERVICE_NAME = "master-service"
 class ConfigKeys(Enum):
     PORT = "PORT"
     MASTER_ADDR = "MS_ADDR" 
+    LAG = "LAG"
