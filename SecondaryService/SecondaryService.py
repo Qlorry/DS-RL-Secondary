@@ -17,6 +17,9 @@ class SecondaryService(BaseHTTPRequestHandler):
             msg = domain.get_messages()
             response = json.dumps(msg)
             self._set_response(200)
+        elif self.path == "/ping":
+            response = "pong"
+            self._set_response(200)
         else:
             self._set_response(404)
         self.wfile.write(response.encode('utf-8'))

@@ -28,10 +28,11 @@ class SecondaryDomain(metaclass=SecondaryDomainMeta):
 
         # A POST request to tthe API
         post_response = requests.post("http://"+master+ "/register", json=data)
-
         # Print the response
         if not post_response.ok:
+            domain_log("Registration failed")
             exit()
+        domain_log("Registred on master with name " + str(IPAddr) + str(my_port))
     
     def add_message(self, id, msg):
         with self.messages_mtx:
