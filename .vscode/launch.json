@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "main.py",
             "console": "integratedTerminal",
-            "args": ["-p", "20000", "-m", "127.0.0.1:30000"],
+            "args": ["-p", "20000", "-m", "127.0.0.1:30000", "--fail_every_2_msg", "true"],
             "justMyCode": true
         }
     ]

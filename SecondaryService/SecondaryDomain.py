@@ -15,10 +15,14 @@ class SecondaryDomainMeta(type):
 
 
 class SecondaryDomain(metaclass=SecondaryDomainMeta):
-    def __init__(self, master, my_port, lagtime):
+    def __init__(self, master, my_port, lagtime, fails):
         self.messages_mtx = Lock()
         self.messages = dict()
         self.lagtime = lagtime
+        self.fails = fails
+        self.message_fail_cnt = False
+        self.message_fail_mtx = Lock()
+
 
         hostname=socket.gethostname()   
         IPAddr=socket.gethostbyname(hostname)   
@@ -36,6 +40,12 @@ class SecondaryDomain(metaclass=SecondaryDomainMeta):
         domain_log("Registred on master with name " + str(IPAddr) + str(my_port))
     
     def add_message(self, id, msg):
+        if self.fails:
+            with self.message_fail_mtx:
+                if self.message_fail_cnt:
+                    self.message_fail_cnt = not self.message_fail_cnt
+                    raise Exception("Test fail this message!!")
+
         if self.lagtime != None:
             time.sleep(self.lagtime)
 

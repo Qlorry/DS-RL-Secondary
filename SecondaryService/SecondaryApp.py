@@ -17,6 +17,7 @@ class SecondaryApp:
         self.add_args_to_parser()
         
         self.config = dict()
+        self.config[ConfigKeys.RANDOM_FAIL_MESSAGE_READ] = False
         self.parse_args()
 
     def parse_args(self):
@@ -24,15 +25,17 @@ class SecondaryApp:
         self.config[ConfigKeys.PORT] = args.port
         self.config[ConfigKeys.MASTER_ADDR] = args.master
         self.config[ConfigKeys.LAG] = args.lag
-        
+        if args.fail_every_2_msg is not None:
+            self.config[ConfigKeys.RANDOM_FAIL_MESSAGE_READ] = args.fail_every_2_msg
 
     def add_args_to_parser(self):
         self.arg_parser.add_argument('-p', '--port', type=int) 
         self.arg_parser.add_argument('-m', '--master', type=str) 
         self.arg_parser.add_argument('-l', '--lag', type=int) 
+        self.arg_parser.add_argument('--fail_every_2_msg', type=bool) 
 
     def run(self):
-        SecondaryDomain(self.config[ConfigKeys.MASTER_ADDR], self.config[ConfigKeys.PORT], self.config[ConfigKeys.LAG])
+        SecondaryDomain(self.config[ConfigKeys.MASTER_ADDR], self.config[ConfigKeys.PORT], self.config[ConfigKeys.LAG], self.config[ConfigKeys.RANDOM_FAIL_MESSAGE_READ])
 
         server_address = ('', self.config[ConfigKeys.PORT])
         httpd = HTTPServer(server_address, SecondaryService)
