@@ -15,11 +15,11 @@ class SecondaryService(BaseHTTPRequestHandler):
         domain = SecondaryDomain()
         if self.path == "/get-messages":
             msg = domain.get_messages()
-            response = json.dumps({"messages":msg})
+            response = json.dumps(msg)
             self._set_response(200)
         else:
             self._set_response(404)
-        self.wfile.write("".encode('utf-8'))
+        self.wfile.write(response.encode('utf-8'))
 
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
