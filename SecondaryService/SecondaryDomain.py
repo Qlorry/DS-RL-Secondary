@@ -38,6 +38,10 @@ class SecondaryDomain(metaclass=SecondaryDomainMeta):
             domain_log("Registration failed")
             exit()
         domain_log("Registred on master with name " + str(IPAddr) + str(my_port))
+        messages = post_response.json()
+        for m in messages:
+            self.messages[m] = messages[m]
+
     
     def add_message(self, id, msg):
         if self.fails:
@@ -54,6 +58,6 @@ class SecondaryDomain(metaclass=SecondaryDomainMeta):
 
     def get_messages(self):
         with self.messages_mtx:
-            return self.messages
+            return dict(sorted(self.messages.items()))
         
         
